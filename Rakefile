@@ -7,12 +7,26 @@ REPOS = FileList['*'].select{|x| File.directory?(x)}
 DUMPS = REPOS.map{|x| [DUMP_DIR,"/",x,".svn"].join}
 RDIFF_BAKUP = 'D:/DATA/rdiff-backup.exe'
 
+
 directory DUMP_DIR
 directory DEST_DIR
 
-task :default do
-  puts REPOS.join(' ')
+desc 'svn-backup-dump.pyを使用してバックアップ'
+task :default => REPOS do
+
 end
+
+REPOS.each do |repo|
+  dest = [DEST_DIR, "/", repo].join
+
+  directory dest
+
+  desc "Backup '#{repo}' to #{DEST_DIR}/#{repo}/ "
+  task repo => dest do
+    sh "python svn-backup-dumps.py -b -i #{repo} #{dest}"
+  end
+end
+
 
 desc 'レポジトリのダンプを更新して，バックアップ'
 task :backup => DUMPS do
