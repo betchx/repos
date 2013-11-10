@@ -24,6 +24,8 @@ REPOS.each do |repo|
   desc "Backup '#{repo}' to #{DEST_DIR}/#{repo}/ "
   task repo => dest do
     sh "python svn-backup-dumps.py -b -i #{repo} #{dest}"
+    sh "#{RDIFF_BAKUP} #{repo}/hooks #{dest}/hooks"
+    sh "#{RDIFF_BAKUP} #{repo}/conf #{dest}/conf"
   end
 end
 
