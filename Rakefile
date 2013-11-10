@@ -5,7 +5,7 @@ DEST_DIR = 't:/back/repo-dumps'
 
 REPOS = FileList['*'].select{|x| File.directory?(x)}
 DUMPS = REPOS.map{|x| [DUMP_DIR,"/",x,".svn"].join}
-RDIFF_BAKUP = 'D:/DATA/rdiff-backup.exe'
+RDIFF_BAKUP = 'rdiff-backup.exe'
 
 
 directory DUMP_DIR
