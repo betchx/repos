@@ -25,13 +25,22 @@ REPOS.each do |repo|
   desc "Backup '#{repo}' to #{DEST_DIR}/#{repo}/ "
   task repo => dest do
     sh "python svn-backup-dumps.py -b -i #{repo} #{dest}"
-    sh "#{RDIFF_BAKUP} #{repo}/hooks #{dest}/hooks"
-    sh "#{RDIFF_BAKUP} #{repo}/conf #{dest}/conf"
+    %w(hooks conf).each do |sub_dir|
+      mt = FileList["#{repo}/#{sub_dir}/**"].map{|x| File.mtime(x)}.max
+      prev = File.mtime(dest+'/hooks/rdiff-backup-data')
+      puts "Latest modified time: #{mt}"
+      puts "Last backup dir time: #{prev}"
+      if mt > prev
+        sh "#{RDIFF_BAKUP} #{repo}/#{sub_dir} #{dest}/#{sub_dir}"
+      else
+        puts "Skip backup of #{repo}/#{sub_dir} "
+      end
+    end
   end
 end
 
 
-desc 'レポジトリのダンプを更新して，バックアップ'
+desc '(非推奨)レポジトリのダンプを更新して，バックアップ'
 task :backup => DUMPS do
   sh "#{RDIFF_BAKUP} --print-statistics #{DUMP_DIR} #{DEST_DIR}"
 end
