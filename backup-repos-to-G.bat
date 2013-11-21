@@ -17,6 +17,7 @@ rem        svnadmin hotcopy %%i t:\back\repos\%%~ni --clean-logs
 rem )
 
 rem 具体的な作業はRakefileに移動させたので，rakeを起動するだけとなった．
-rake -f Gdrive.rake
+rem なお，コマンドプロンプトからはrake.batを経由するので，call しないと制御が帰ってこない．
+call rake -f Gdrive.rake
 
 pause

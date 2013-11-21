@@ -17,6 +17,6 @@ rem        svnadmin hotcopy %%i t:\back\repos\%%~ni --clean-logs
 rem )
 
 rem 具体的な作業はRakefileに移動させたので，rakeを起動するだけとなった．
-rake
+call rake
 
 pause
