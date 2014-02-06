@@ -27,9 +27,15 @@ REPOS.each do |repo|
     sh "python svn-backup-dumps.py -b -i #{repo} #{dest}"
     %w(hooks conf).each do |sub_dir|
       mt = FileList["#{repo}/#{sub_dir}/**"].map{|x| File.mtime(x)}.max
-      prev = File.mtime(dest+'/hooks/rdiff-backup-data')
-      puts "Latest modified time: #{mt}"
-      puts "Last backup dir time: #{prev}"
+      data_dir = dest+'/hooks/rdiff-backup-data'
+      if File.directory?(data_dir)
+        prev = File.mtime(data_dir)
+        puts "Latest modified time: #{mt}"
+        puts "Last backup dir time: #{prev}"
+      else
+        # force backup
+        prev = mt - 1
+      end
       if mt > prev
         sh "#{RDIFF_BAKUP} #{repo}/#{sub_dir} #{dest}/#{sub_dir}"
       else
